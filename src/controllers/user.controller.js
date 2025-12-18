@@ -5,7 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 const registerUser = asyncHandler(async (req, res, next) => {
 const { fullname, username, email, password } = req.body;
-console.log("email:", email);
+// console.log("email:", email);
 
 if (
     [fullname, username, email, password].some((field) => field?.trim() === "") 
@@ -20,8 +20,15 @@ if (existedUser) {
     
     throw new ApiError(409, "User with this email or username already exists");
 }
+// console.log("req.files:", req.files);
 const avatarLocalpath = req.files?.avatar[0]?.path;
-const coverImageLocalpath = req.files?.coverImage[0]?.path;
+// const coverImageLocalpath = req.files?.coverImage[0]?.path;
+let coverImageLocalpath;
+if(req.files && Array.isArray(req.files.coverImage)&& req.files.coverImage.length >0){
+    
+    coverImageLocalpath = req.files.coverImage[0].path;
+}
+
 if(!avatarLocalpath){
     throw new ApiError (400, "Avatar is required");
 }
